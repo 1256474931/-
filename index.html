@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html,
+        body{
+            height: 100%;
+        }
+        .viewport{
+            width: 100%;
+            min-height: 100vh;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            position: absolute;
+        }
+        .box{
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: lightblue;
+            left: 0;
+            bottom: 0;
+            text-align: center;
+            line-height: 50px;
+            color: #eee;
+            font-size: 30px;
+        }
+        .countdown{
+            width: 300px;
+            height: 300px;
+            line-height: 300px;
+            color: rgba(238,238,238,.9);
+            font-size: 200px;
+            font-weight: bold;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            text-align: center;
+        }
+        .scroeBox{
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="viewport">
+        
+        <!-- <div class="box">
+            
+        </div> -->
+
+        <div class="countdown">
+        </div>
+    </div>
+
+    <div class="scoreBox">
+            Score: <span class="score"></span>
+    </div>
+
+    
+    
+    
+    <script>
+        function emag(){
+            this.viewport = document.querySelector('.viewport');
+            this.boxInner = '';
+            this.timer = null;
+            this.score = 0;
+        };
+        emag.prototype.initBox = function(){
+            var box = document.createElement('div');
+            var w = window.innerWidth;
+            var h = window.innerHeight;
+            var inner = this.getInner();
+            box.classList.add('box');
+            box.style.left = Math.floor(Math.random()*(w-50)) + 'px';
+            box.style.bottom =  Math.floor(Math.random()*(h-50)) + 'px';      
+            box.innerText = inner[Math.floor(Math.random()*26)];
+            this.boxInner = box.innerText;
+            this.viewport.appendChild(box);
+        };
+        emag.prototype.getInner = function(){
+            var innerArr = [];
+            for(var i = 0; i <= 25; i++){
+                innerArr.push(String.fromCharCode((65 + i)).toLowerCase());
+            }
+            return innerArr;
+        };
+        emag.prototype.typeCheck = function(){
+            var that = this;
+            var scoreInner = document.querySelector('.score');
+            document.onkeydown = function(e){
+                if(e.key == that.boxInner){
+                    that.viewport.innerHTML = '';
+                    that.initBox();
+                    that.score+=1;
+                    scoreInner.innerText = that.score;
+
+                }
+            }
+        };
+        emag.prototype.countDown = function(){
+            var countdown = document.querySelector('.countdown');
+            var i = 3;         
+            this.timer = setInterval(function(){
+                if(i > 0){
+                    countdown.innerText = i;
+                    i--;
+                }else if( i == 0){
+                    countdown.innerText = 'GO';    
+                    i--;  
+                }else if( i < 0){
+                    countdown.style.display = 'none';
+                    return;
+                }
+            },1000);            
+        };
+        emag.prototype.start = function(){
+            var that = this;
+            this.countDown();
+            setTimeout(function(){
+                that.initBox();
+                that.typeCheck();
+            },5000)
+        }
+        var g = new emag();
+        g.start();
+    </script>
+</body>
+</head>
+<body>
+    
+</body>
+</html>
